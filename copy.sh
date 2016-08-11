@@ -6,10 +6,9 @@ plugin_dir=$1
 
 xcode_project_path=$2
 
-if [$# < 1]
-then
-	echo "input sdk path"
-fi
+# if [[$# < 1]];then
+# 	echo "input sdk path"
+# fi
 
 #update plugin
 #svn update $plugin_dir
@@ -33,5 +32,17 @@ if [[ -d  ${plugin_dir}/SDK_Plugin ]]; then
 	echo "复制SDK_Plugin成功"
 	#执行install
 	cd $xcode_project_path
-	run.command
+	#SDK_Plugin/run.command
+	echo 'pkg begin...'
+	LANG="zh_CN.UTF-8"
+	pwd
+
+	target=${xcode_project_path}/SDK_Plugin
+
+	cd $target
+	pwd
+
+	ruby ./run.rb $target
+	# touch step1_ok.txt
+	echo 'pkg end...'
 fi

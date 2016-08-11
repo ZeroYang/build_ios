@@ -17,58 +17,58 @@ source ${Base_Path}/build_ios/config.cfg
 # debug=false
 # ----------------------------------------------------------------------------------------------------
 
-echo "sdk_plugin_dir=$sdk_plugin_dir"
-echo "channel=$channel"
-echo "url=$url"
-echo "project=$project"
-echo "ipa_name=$ipa_name"
+# echo "sdk_plugin_dir=$sdk_plugin_dir"
+# echo "channel=$channel"
+# echo "url=$url"
+# echo "project=$project"
+# echo "ipa_name=$ipa_name"
 
 
-# echo "-----------svn up $Base_Path-----------"
+echo "-----------svn up $Base_Path-----------"
 
-# cd "${Base_Path}/Assets/Resources/UI/Login"
-# svn up
+cd "${Base_Path}/Assets/Resources/UI/Login"
+svn up
 
-# cd "${Base_Path}/Assets/Scene"
-# svn up
+cd "${Base_Path}/Assets/Scene"
+svn up
 
-# cd "${Base_Path}/Assets/NGUI"
-# svn up
+cd "${Base_Path}/Assets/NGUI"
+svn up
 
-# cd "${Base_Path}/Assets/Script"
-# svn up
+cd "${Base_Path}/Assets/Script"
+svn up
 
-# cd "${Base_Path}/Assets/Plugins"
-# svn up
+cd "${Base_Path}/Assets/Plugins"
+svn up
 
-# #svn update
+#svn update
 
-# # #打包工程的Resources/UI只保留Login目录
-# # rm -r "${Base_Path}/Assets/Resources/UI/Atlas"
-# # rm -r "${Base_Path}/Assets/Resources/UI/mat"
-# # rm -r "${Base_Path}/Assets/Resources/UI/texture"
-# # rm -r "${Base_Path}/Assets/Resources/UI/txt"
-# # rm -r "${Base_Path}/Assets/Resources/UI/UIPrefab"
-# # rm -r "${Base_Path}/Assets/Resources/UI/animation"
-# # rm -r "${Base_Path}/Assets/Resources/UI/UIScenes"
+# #打包工程的Resources/UI只保留Login目录
+# rm -r "${Base_Path}/Assets/Resources/UI/Atlas"
+# rm -r "${Base_Path}/Assets/Resources/UI/mat"
+# rm -r "${Base_Path}/Assets/Resources/UI/texture"
+# rm -r "${Base_Path}/Assets/Resources/UI/txt"
+# rm -r "${Base_Path}/Assets/Resources/UI/UIPrefab"
+# rm -r "${Base_Path}/Assets/Resources/UI/animation"
+# rm -r "${Base_Path}/Assets/Resources/UI/UIScenes"
 
-# # rm -r "${Base_Path}/Assets/Resources/UI/Atlas.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/mat.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/texture.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/txt.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/UIPrefab.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/animation.meta"
-# # rm -r "${Base_Path}/Assets/Resources/UI/UIScenes.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/Atlas.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/mat.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/texture.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/txt.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/UIPrefab.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/animation.meta"
+# rm -r "${Base_Path}/Assets/Resources/UI/UIScenes.meta"
 
-# echo "更新成功"
+echo "更新成功"
 
-# UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 
-# #导出xcode工程
-# $UNITY_PATH -projectPath $Base_Path -executeMethod AutoBuildForIOS.BuildForIOS  -quit channel=$channel url=$url project=$project debug=$debug
+#导出xcode工程
+$UNITY_PATH -projectPath $Base_Path -executeMethod AutoBuildForIOS.BuildForIOS  -quit channel=$channel url=$url project=$project debug=$debug
 
-# echo "xcode工程生成完毕"
-# echo "-----------------"
+echo "xcode工程生成完毕"
+echo "-----------------"
 
 #xcode 工程路径
 XCODE_PROJ_PATH=${Base_Path}/$project
@@ -78,13 +78,14 @@ XCODE_PROJ_PATH=${Base_Path}/$project
 #buildsetting.sh
 setting_ios_path=${Base_Path}/build_ios/copy.sh
 
-echo "copy sdk plugin src"
-echo "install sdk plugin"
-$setting_ios_path $sdk_plugin_dir  $XCODE_PROJ_PATH
+# echo "-----------------copy&install sdk plugin src-----------------"
+# echo "copy sdk plugin src"
+# echo "install sdk plugin"
+# $setting_ios_path $sdk_plugin_dir  $XCODE_PROJ_PATH
 
 
-#开始xcode 工程build生成ipa
-echo "-----------------start xcodebuild-----------------"
+# #开始xcode 工程build生成ipa
+# echo "-----------------start xcodebuild-----------------"
 
 #待处理问题
 ##xcode cer 签名
@@ -97,11 +98,14 @@ XCODE_BUILD_PATH=$XCODE_PROJ_PATH/build
 #ipa_name 使用传人的 project name
 #ipa_name=$project
 
-#clean#
-xcodebuild clean
-
 #编译xcode工程
 cd $XCODE_PROJ_PATH
+echo $(pwd)
+
+#clean#
+echo "-----------------xcodebuild clean-----------------"
+xcodebuild clean
+
 #xcodebuild || exit
 # echo "-----------------end xcodebuild-----------------"
 
@@ -114,12 +118,19 @@ cd $XCODE_PROJ_PATH
 # echo "-----------------success----------------"
 
 PROJECT_NAME=$project
-SCHEME_NAME=$project
+SCHEME_NAME=${sdk_channelName}_${project}
 
 echo "dev profile name = ${DEV_PROFILE_NAME}"
 echo "dis profile name = ${DIS_PROFILE_NAME}"
 
 DATE=$(date +%Y%m%d%H%M)
+
+#如果没有sdk_channelName，则scheme默认使用Project_Name
+if [[ ! -n "${sdk_channelName}" ]]; then
+	SCHEME_NAME=$project
+fi
+
+echo "SCHEME_NAME = ${SCHEME_NAME}"
 
 #archive
 xcodebuild archive -project ${PROJECT_NAME}.xcodeproj \
